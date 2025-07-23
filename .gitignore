@@ -1,0 +1,41 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# macOS system files
+.DS_Store
+
+# Uploads (backend)
+uploads/
+
+# React build output
+/build/
+/dist/
+/out/
+
+# VSCode settings (se você usar VSCode)
+.vscode/
+
+# Mac desktop files
+._*
+
+# Optional npm cache folder
+.npm/
+
+# Coverage directory for tests
+coverage/
+
+# Misc
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
