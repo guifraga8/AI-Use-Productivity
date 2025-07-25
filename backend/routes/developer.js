@@ -3,26 +3,29 @@ const pool = require('../db');
 const router = express.Router();
 
 router.post('/developer/admin', async (req, res) => {
-    const { name, role } = req.body;
-
-    if (!name || !role) {
-        return res.status(400).json({ error: 'Nome e cargo são obrigatórios.'});
-    }
-
-    if (!group_type) {
-        return res.status(400).json({ error: 'Erro ao trazer o tipo de grupo ADMIN.' })
+    const { name } = req.body;
+    
+    if (!name) {
+        return res.status(400).json({ error: 'Nome é obrigatório.' });
     }
 
     try {
         const result = await pool.query(
-            'INSERT INTO Developer (name, role, group_type) VALUES ($1, $2, $3) RETURNING *',
-            [name, role, 'admin']
+            'SELECT * FROM Developer WHERE name = $1 AND group_type = $2',
+            [name, 'admin'] 
         );
 
-        res.status(201).json(result.rows[0]);
+        if (result.rows.length === 0) {
+            return res.status(403).json({ error: 'Acesso negado. Não é um administrador.' });
+        }
+
+        res.status(200).json({
+            message: 'Acesso autorizado',
+            admin: result.rows[0]
+        });
     } catch (error) {
-        console.error('Erro ao cadastrar desenvolvedor do grupo ADMIN: ', error);
-        res.status(500).json({ error: 'Erro ao cadastrar desenvolvedor do grupo ADMIN.' });
+        console.error('Erro ao verificar admin: ', error);
+        res.status(500).json({ error: 'Erro ao verificar admin.' });
     }
 });
 
@@ -122,7 +125,7 @@ router.get('/developer/challenges/with_ai', async (req, res) => {
             res.status(200).json(result.rows);
     } catch (error) {
         console.error('Erro ao buscar desenvolvedores do grupo COM IA e desafios atrelados: ', error);
-        res.status(500).json({ error: 'Erro ao buscar desenvolvedores e desafios atrelados.' });
+        res.status(500).json({ error: 'Erro ao buscar desenvolvedores do grupo COM IA e desafios atrelados.' });
     }
 });
 
@@ -140,7 +143,7 @@ router.get('/developer/challenges/without_ai', async (req, res) => {
             res.status(200).json(result.rows);
     } catch (error) {
         console.error('Erro ao buscar desenvolvedores do grupo SEM IA e desafios atrelados: ', error);
-        res.status(500).json({ error: 'Erro ao buscar desenvolvedores e desafios atrelados.' });
+        res.status(500).json({ error: 'Erro ao buscar desenvolvedores do grupo SEM IA e desafios atrelados.' });
     }
 });
 
