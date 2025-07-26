@@ -1,41 +1,43 @@
-# Node.js
+# === Node.js ===
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Environment variables
+# === Environment variables ===
 .env
+frontend/.env
+backend/.env
 
-# Logs
+# === Logs ===
 *.log
+logs/
 
-# macOS system files
+# === macOS system files ===
 .DS_Store
-
-# Uploads (backend)
-uploads/
-
-# React build output
-/build/
-/dist/
-/out/
-
-# VSCode settings (se você usar VSCode)
-.vscode/
-
-# Mac desktop files
 ._*
 
-# Optional npm cache folder
-.npm/
+# === React build output ===
+frontend/dist/
+frontend/dist-ssr/
+frontend/build/
+frontend/out/
 
-# Coverage directory for tests
+# === Backend build / uploads / coverage ===
+backend/uploads/
 coverage/
 
-# Misc
+# === Editor directories and files ===
+.vscode/
+!.vscode/extensions.json
 .idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
+*.sw?
+
+# === Optional npm cache ===
+.npm/
