@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Button, Stack } from "@mui/material";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -15,12 +16,20 @@ export default function Home() {
       </p>
 
       <div style={{ display: "flex", justifyContent: "center", gap: "2rem" }}>
-        <button onClick={() => navigate("/register/with_ai")}>
-          Grupo com IA
-        </button>
-        <button onClick={() => navigate("/register/without_ai")}>
-          Grupo sem IA
-        </button>
+        <Stack spacing={2} direction="row">
+          <Button
+            onClick={() => navigate("/register/with_ai")}
+            variant="contained"
+          >
+            Grupo com IA
+          </Button>
+          <Button
+            onClick={() => navigate("/register/without_ai")}
+            variant="contained"
+          >
+            Grupo sem IA
+          </Button>
+        </Stack>
       </div>
     </div>
   );
