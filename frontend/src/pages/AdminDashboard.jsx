@@ -1,4 +1,3 @@
-// src/pages/AdminDashboard.jsx
 export default function AdminDashboard() {
   const adminName = localStorage.getItem("adminName");
 

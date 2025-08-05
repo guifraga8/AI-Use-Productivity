@@ -1,4 +1,3 @@
-// src/pages/AdminLogin.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -38,7 +37,6 @@ export default function Admin() {
       localStorage.setItem("isAdmin", "true");
       localStorage.setItem("adminName", data.admin.name);
       navigate("/admin/dashboard");
-
     } catch (error) {
       console.error("Erro na verificação: ", error);
       setError("Erro na verificação.");
