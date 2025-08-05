@@ -3,8 +3,8 @@ import RegisterForm from "../components/RegisterForm";
 export default function RegisterWithAI() {
   return (
     <RegisterForm
-      title="Registro (Grupo com IA)"
-      apiEndpoint="/developer/with_ai"
+      title="Registro (Grupo sem IA)"
+      apiEndpoint="/developer/without_ai"
     />
   );
 }
