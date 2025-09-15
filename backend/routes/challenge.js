@@ -1,5 +1,6 @@
 import express from "express";
 import pool from "../db.js";
+import path from "path";
 
 const router = express.Router();
 
@@ -72,6 +73,17 @@ router.get("/challenge/challenges", async (req, res) => {
     console.error("Erro ao buscar desafios: ", error);
     res.status(500).json({ error: "Erro ao buscar desafios." });
   }
+});
+
+router.get("/challenge/download", (req, res) => {
+  const filePath = path.resolve("challenge/desafio_transportadora.zip");
+
+  res.download(filePath, "desafio_transportadora.zip", (error) => {
+    if (error) {
+      console.error("Erro ao enviar o arquivo: ", error);
+      res.status(500).send("Erro ao baixar o arquivo.");
+    }
+  });
 });
 
 export default router;
