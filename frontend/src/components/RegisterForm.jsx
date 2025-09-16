@@ -39,7 +39,8 @@ export default function RegisterForm({ title, apiEndpoint }) {
         throw new Error(error || "Erro ao registrar.");
       }
 
-      localStorage.setItem("registeredUser", JSON.stringify(form));
+      const userData = await response.json();
+      localStorage.setItem("registeredUser", JSON.stringify(userData));
       setSuccess(true);
       navigate("/challenge");
     } catch (error) {
