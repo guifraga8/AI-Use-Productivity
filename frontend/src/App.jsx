@@ -5,7 +5,7 @@ import PrivateRouteAdmin from "./routes/PrivateRouteAdmin";
 import Home from "./pages/Home";
 import RegisterWithAI from "./pages/RegisterWithAI";
 import RegisterWithoutAI from "./pages/RegisterWithoutAI";
-import PrivateRouteRegister from "./routes/PrivateRouteRegister";
+import PrivateRoute from "./routes/PrivateRoute";
 import Challenge from "./pages/Challenge";
 import Upload from "./pages/Upload";
 import Conclusion from "./pages/Conclusion";
@@ -26,41 +26,47 @@ function App() {
         <Route
           path="/register/with_ai"
           element={
-            <PrivateRouteRegister requiresRegistration={false}>
+            <PrivateRoute
+              requiresRegistration={false}
+              redirectIfRegistered="/challenge"
+            >
               <RegisterWithAI />
-            </PrivateRouteRegister>
+            </PrivateRoute>
           }
         />
         <Route
           path="/register/without_ai"
           element={
-            <PrivateRouteRegister requiresRegistration={false}>
+            <PrivateRoute
+              requiresRegistration={false}
+              redirectIfRegistered="/challenge"
+            >
               <RegisterWithoutAI />
-            </PrivateRouteRegister>
+            </PrivateRoute>
           }
         />
         <Route
           path="/challenge"
           element={
-            <PrivateRouteRegister requiresRegistration={true}>
+            <PrivateRoute requiresRegistration={true} redirectIfNotRegistered="/">
               <Challenge />
-            </PrivateRouteRegister>
+            </PrivateRoute>
           }
         />
         <Route
           path="/upload"
           element={
-            <PrivateRouteRegister requiresRegistration={true}>
+            <PrivateRoute requiresRegistration={true} redirectIfNotRegistered="/">
               <Upload />
-            </PrivateRouteRegister>
+            </PrivateRoute>
           }
         />
         <Route
           path="/conclusion"
           element={
-            <PrivateRouteRegister requiresRegistration={true}>
+            <PrivateRoute requiresRegistration={true} redirectIfNotRegistered="/">
               <Conclusion />
-            </PrivateRouteRegister>
+            </PrivateRoute>
           }
         />
         <Route path="/register" element={<Home />} />

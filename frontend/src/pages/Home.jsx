@@ -1,8 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Stack } from "@mui/material";
+import { useEffect } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const lastRegisterPage = localStorage.getItem("lastRegisterPage");
+
+    if (lastRegisterPage) {
+      navigate(lastRegisterPage, { replace: true });
+    }
+  }, [navigate]);
 
   return (
     <div style={{ padding: "2rem", textAlign: "center" }}>

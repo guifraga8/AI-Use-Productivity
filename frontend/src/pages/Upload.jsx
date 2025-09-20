@@ -12,7 +12,13 @@ export default function Upload() {
   const [uploadedFile, setUploadedFile] = useState(null);
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
+      alert("Somente arquivos .zip são permitidos!");
+      e.target.value = null;
+      return;
+    }
+    setFile(selectedFile);
   };
 
   const handleUpload = async () => {
@@ -27,7 +33,7 @@ export default function Upload() {
     }
 
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/challenge/upload`,
+      `${import.meta.env.VITE_API_URL}/challenge/upload?developer_id=${storedUser.id}&developer_name=${encodeURIComponent(storedUser.name)}`,
       {
         method: "POST",
         body: formData,
@@ -71,7 +77,7 @@ export default function Upload() {
     <div style={{ padding: "2rem" }}>
       <h1>Olá, {name}. Envie sua solução do Desafio Técnico</h1>
 
-      <input type="file" onChange={handleFileChange} />
+      <input type="file" accept=".zip" onChange={handleFileChange} />
       <br />
       <br />
 

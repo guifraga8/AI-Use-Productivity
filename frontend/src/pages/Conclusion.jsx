@@ -7,15 +7,17 @@ export default function Conclusion() {
   const navigate = useNavigate();
 
   const handleReset = () => {
+    const lastRegisterPage = localStorage.getItem("lastRegisterPage");
+
     localStorage.clear();
-    navigate("/");
+    navigate(lastRegisterPage);
   };
 
   return (
     <div style={{ textAlign: "center", padding: "2rem" }}>
       <h1>Valeu, {name}!</h1>
       <Button onClick={handleReset} variant="contained">
-        Limpar localStorage e voltar
+        Voltar ao início
       </Button>
     </div>
   );

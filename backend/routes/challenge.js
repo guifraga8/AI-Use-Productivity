@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import upload from "../middleware/upload.js";
+import { insertDeveloperChallenge } from "./developerChallenge.js";
 
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -107,6 +108,12 @@ router.post("/challenge/end", async (req, res) => {
         console.warn(`Arquivo temporário não encontrado: ${tmpPath}`);
       }
     }
+
+    await insertDeveloperChallenge({
+      developer_id,
+      challenge_id: challenge.id,
+      file_name: tmpFile,
+    });
 
     res.status(200).json({
       message: "Desafio finalizado com sucesso. Arquivo movido para uploads.",

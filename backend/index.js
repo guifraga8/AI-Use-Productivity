@@ -6,6 +6,7 @@ import cors from "cors";
 import systemRoutes from "./routes/system.js";
 import developerRoutes from "./routes/developer.js";
 import challengeRoutes from "./routes/challenge.js";
+import developerChallengeRoutes from "./routes/developerChallenge.js"
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api", systemRoutes);
 app.use("/api", developerRoutes);
 app.use("/api", challengeRoutes);
+app.use("/api", developerChallengeRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Servidor rodando na porta ${process.env.PORT}`);

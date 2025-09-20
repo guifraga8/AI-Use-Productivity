@@ -86,97 +86,276 @@ router.get("/developer/developers", async (req, res) => {
   }
 });
 
-router.get("/developer/:developer_id/challenges", async (req, res) => {
-  const { developer_id } = req.params;
-
+router.get("/developer/challenges/", async (req, res) => {
   try {
-    const result = await pool.query(
-      "SELECT * FROM Challenge WHERE developer_id = $1 ORDER BY start_time DESC",
-      [developer_id]
-    );
+    const result = await pool.query(`
+      SELECT 
+          d.id AS developer_id,
+          d.name AS developer_name,
+          d.role AS developer_role,
+          d.group_type AS developer_group,
+          d.created_at AS developer_created_at,
+          c.id AS challenge_id,
+          c.developer_id AS challenge_developer_id,
+          c.start_time,
+          c.end_time,
+          c.total_time_ms,
+          dc.id AS devchallenge_id,
+          dc.file_name,
+          dc.created_at AS devchallenge_created_at
+      FROM Developer d
+      LEFT JOIN Challenge c ON c.developer_id = d.id
+      LEFT JOIN DeveloperChallenge dc ON dc.challenge_id = c.id
+      ORDER BY d.id, c.id, dc.id
+    `);
 
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error("Erro ao buscar desafios do desenvolvedor: ", error);
-    res
-      .status(500)
-      .json({ error: "Erro ao buscar desafios do desenvolvedor." });
-  }
-});
+    const data = {};
 
-router.get("/developer/challenges", async (req, res) => {
-  try {
-    const result = await pool.query(
-      `SELECT cha.id,
-                    cha.developer_id,
-                    dev.name,
-                    dev.role,
-                    cha.total_time_ms
-             FROM Challenge cha JOIN Developer dev on cha.developer_id = dev.id`
-    );
-    res.status(200).json(result.rows);
+    result.rows.forEach(row => {
+      const devId = row.developer_id;
+
+      if (!data[devId]) {
+        data[devId] = {
+          developer: {
+            id: row.developer_id,
+            name: row.developer_name,
+            role: row.developer_role,
+            group: row.developer_group,
+            created_at: row.developer_created_at
+          },
+          challenges: []
+        };
+      }
+
+      if (row.challenge_id) {
+        let challengeObj = {
+          id: row.challenge_id,
+          start_time: row.start_time,
+          end_time: row.end_time,
+          total_time_ms: row.total_time_ms,
+          developerChallenge: row.devchallenge_id
+            ? {
+                id: row.devchallenge_id,
+                file_name: row.file_name,
+                created_at: row.devchallenge_created_at
+              }
+            : null
+        };
+
+        data[devId].challenges.push(challengeObj);
+      }
+    });
+
+    res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error(
-      "Erro ao buscar desenvevolders e desafios atrelados: ",
-      error
-    );
-    res
-      .status(500)
-      .json({ error: "Erro ao buscar desenvolvedores e desafios atrelados." });
+    console.error("Erro ao buscar dados completos de developers + challenges: ", error);
+    res.status(500).json({ error: "Erro ao buscar dados completos." });
   }
 });
 
 router.get("/developer/challenges/with_ai", async (req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT cha.id,
-                    cha.developer_id,
-                    dev.name,
-                    dev.role,
-                    dev.group_type,
-                    cha.total_time_ms
-             FROM Challenge cha JOIN Developer dev on cha.developer_id = dev.id
-             WHERE group_type = 'with_ai'`
-    );
-    res.status(200).json(result.rows);
+    const result = await pool.query(`
+      SELECT 
+          d.id AS developer_id,
+          d.name AS developer_name,
+          d.role AS developer_role,
+          d.group_type AS developer_group,
+          d.created_at AS developer_created_at,
+          c.id AS challenge_id,
+          c.developer_id AS challenge_developer_id,
+          c.start_time,
+          c.end_time,
+          c.total_time_ms,
+          dc.id AS devchallenge_id,
+          dc.file_name,
+          dc.created_at AS devchallenge_created_at
+      FROM Developer d
+      LEFT JOIN Challenge c ON c.developer_id = d.id
+      LEFT JOIN DeveloperChallenge dc ON dc.challenge_id = c.id
+      WHERE d.group_type = 'with_ai'
+      ORDER BY d.id, c.id, dc.id
+    `);
+
+    const data = {};
+
+    result.rows.forEach(row => {
+      const devId = row.developer_id;
+
+      if (!data[devId]) {
+        data[devId] = {
+          developer: {
+            id: row.developer_id,
+            name: row.developer_name,
+            role: row.developer_role,
+            group: row.developer_group,
+            created_at: row.developer_created_at
+          },
+          challenges: []
+        };
+      }
+
+      if (row.challenge_id) {
+        let challengeObj = {
+          id: row.challenge_id,
+          start_time: row.start_time,
+          end_time: row.end_time,
+          total_time_ms: row.total_time_ms,
+          developerChallenge: row.devchallenge_id
+            ? {
+                id: row.devchallenge_id,
+                file_name: row.file_name,
+                created_at: row.devchallenge_created_at
+              }
+            : null
+        };
+
+        data[devId].challenges.push(challengeObj);
+      }
+    });
+
+    res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error(
-      "Erro ao buscar desenvolvedores do grupo COM IA e desafios atrelados: ",
-      error
-    );
-    res
-      .status(500)
-      .json({
-        error:
-          "Erro ao buscar desenvolvedores do grupo COM IA e desafios atrelados.",
-      });
+    console.error("Erro ao buscar dados completos de developers + challenges: ", error);
+    res.status(500).json({ error: "Erro ao buscar dados completos." });
   }
 });
 
 router.get("/developer/challenges/without_ai", async (req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT cha.id,
-                    cha.developer_id,
-                    dev.name,
-                    dev.role,
-                    dev.group_type,
-                    cha.total_time_ms
-             FROM Challenge cha JOIN Developer dev on cha.developer_id = dev.id
-             WHERE group_type = 'without_ai'`
-    );
-    res.status(200).json(result.rows);
+    const result = await pool.query(`
+      SELECT 
+          d.id AS developer_id,
+          d.name AS developer_name,
+          d.role AS developer_role,
+          d.group_type AS developer_group,
+          d.created_at AS developer_created_at,
+          c.id AS challenge_id,
+          c.developer_id AS challenge_developer_id,
+          c.start_time,
+          c.end_time,
+          c.total_time_ms,
+          dc.id AS devchallenge_id,
+          dc.file_name,
+          dc.created_at AS devchallenge_created_at
+      FROM Developer d
+      LEFT JOIN Challenge c ON c.developer_id = d.id
+      LEFT JOIN DeveloperChallenge dc ON dc.challenge_id = c.id
+      WHERE d.group_type = 'without_ai'
+      ORDER BY d.id, c.id, dc.id
+    `);
+
+    const data = {};
+
+    result.rows.forEach(row => {
+      const devId = row.developer_id;
+
+      if (!data[devId]) {
+        data[devId] = {
+          developer: {
+            id: row.developer_id,
+            name: row.developer_name,
+            role: row.developer_role,
+            group: row.developer_group,
+            created_at: row.developer_created_at
+          },
+          challenges: []
+        };
+      }
+
+      if (row.challenge_id) {
+        let challengeObj = {
+          id: row.challenge_id,
+          start_time: row.start_time,
+          end_time: row.end_time,
+          total_time_ms: row.total_time_ms,
+          developerChallenge: row.devchallenge_id
+            ? {
+                id: row.devchallenge_id,
+                file_name: row.file_name,
+                created_at: row.devchallenge_created_at
+              }
+            : null
+        };
+
+        data[devId].challenges.push(challengeObj);
+      }
+    });
+
+    res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error(
-      "Erro ao buscar desenvolvedores do grupo SEM IA e desafios atrelados: ",
-      error
-    );
-    res
-      .status(500)
-      .json({
-        error:
-          "Erro ao buscar desenvolvedores do grupo SEM IA e desafios atrelados.",
-      });
+    console.error("Erro ao buscar dados completos de developers + challenges: ", error);
+    res.status(500).json({ error: "Erro ao buscar dados completos." });
+  }
+});
+
+router.get("/developer/:developer_id/challenge", async (req, res) => {
+  const { developer_id } = req.params;
+  
+  try {
+    const result = await pool.query(`
+      SELECT 
+          d.id AS developer_id,
+          d.name AS developer_name,
+          d.role AS developer_role,
+          d.group_type AS developer_group,
+          d.created_at AS developer_created_at,
+          c.id AS challenge_id,
+          c.developer_id AS challenge_developer_id,
+          c.start_time,
+          c.end_time,
+          c.total_time_ms,
+          dc.id AS devchallenge_id,
+          dc.file_name,
+          dc.created_at AS devchallenge_created_at
+      FROM Developer d
+      LEFT JOIN Challenge c ON c.developer_id = d.id
+      LEFT JOIN DeveloperChallenge dc ON dc.challenge_id = c.id
+      WHERE d.id = $1
+      ORDER BY d.id, c.id, dc.id
+    `, [developer_id]);
+
+    const data = {};
+
+    result.rows.forEach(row => {
+      const devId = row.developer_id;
+
+      if (!data[devId]) {
+        data[devId] = {
+          developer: {
+            id: row.developer_id,
+            name: row.developer_name,
+            role: row.developer_role,
+            group: row.developer_group,
+            created_at: row.developer_created_at
+          },
+          challenges: []
+        };
+      }
+
+      if (row.challenge_id) {
+        let challengeObj = {
+          id: row.challenge_id,
+          start_time: row.start_time,
+          end_time: row.end_time,
+          total_time_ms: row.total_time_ms,
+          developerChallenge: row.devchallenge_id
+            ? {
+                id: row.devchallenge_id,
+                file_name: row.file_name,
+                created_at: row.devchallenge_created_at
+              }
+            : null
+        };
+
+        data[devId].challenges.push(challengeObj);
+      }
+    });
+
+    res.status(200).json(Object.values(data));
+  } catch (error) {
+    console.error("Erro ao buscar dados completos de developers + challenges: ", error);
+    res.status(500).json({ error: "Erro ao buscar dados completos." });
   }
 });
 
