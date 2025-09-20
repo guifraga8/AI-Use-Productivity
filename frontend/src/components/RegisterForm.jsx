@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import { Button } from "@mui/material";
 
 export default function RegisterForm({ title, apiEndpoint }) {
   const [form, setForm] = useState({ name: "", role: "" });
@@ -58,45 +60,41 @@ export default function RegisterForm({ title, apiEndpoint }) {
         padding: "2rem",
       }}
     >
-      <div style={{ maxWidth: "350px", width: "100%" }}>
+      <div style={{ textAlign: "center", width: "100%", marginTop: "10%" }}>
         <h1>{title}</h1>
 
         {success ? (
           <p>Registrado com sucesso!</p>
         ) : (
           <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: "1rem", marginLeft: "4rem" }}>
-              <label>
-                Nome:{" "}
-                <input
-                  type="text"
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
+            <div style={{ textAlign: "center" }}>
+              <TextField
+                required
+                id="outlined-required"
+                label="Nome"
+                placeholder="Digite seu nome"
+                value={form.name}
+                onChange={handleChange}
+                name="name"
+              />
             </div>
-
-            <div style={{ marginBottom: "1rem", marginLeft: "4rem" }}>
-              <label>
-                Cargo:{" "}
-                <input
-                  type="text"
-                  name="role"
-                  value={form.role}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-            </div>
-
-            <div style={{ marginLeft: "8rem" }}>
-              <button type="submit" disabled={submitting}>
+            <br />
+            <div style={{ textAlign: "center" }}>
+              <TextField
+                required
+                id="outlined-required"
+                label="Cargo"
+                placeholder="Digite seu cargo"
+                value={form.role}
+                onChange={handleChange}
+                name="role"
+              />
+              <br />
+              <br />
+              <Button type="submit" variant="contained" disabled={submitting}>
                 {submitting ? "Enviando..." : "Registrar"}
-              </button>
+              </Button>
             </div>
-
             {error && (
               <p style={{ color: "red", marginTop: "1rem" }}>{error}</p>
             )}

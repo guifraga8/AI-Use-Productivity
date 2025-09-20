@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import { Button } from "@mui/material";
 
 export default function Admin() {
   const [name, setName] = useState("");
@@ -37,6 +40,7 @@ export default function Admin() {
 
       localStorage.setItem("isAdmin", "true");
       localStorage.setItem("adminName", data.admin.name);
+      localStorage.setItem("adminRole", data.admin.role);
       navigate("/admin/dashboard");
     } catch (error) {
       console.error("Erro na verificação: ", error);
@@ -45,23 +49,39 @@ export default function Admin() {
   };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>
+    <div
+      style={{
+        padding: "2rem",
+        maxWidth: "400px",
+        margin: "0 auto",
+        marginTop: "10%",
+      }}
+    >
       <h1 style={{ textAlign: "center" }}>Login de Administrador</h1>
+      <br />
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Digite seu nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          style={{ width: "100%", padding: "0.5rem", marginBottom: "1rem" }}
-        />
-        <button
-          type="submit"
-          style={{ width: "100%", padding: "0.5rem", marginLeft: "0.5rem" }}
-        >
-          Entrar
-        </button>
+        <div style={{ textAlign: "center" }}>
+          <Box
+            component="form"
+            sx={{ "& .MuiTextField-root": { m: 1, width: "25ch" } }}
+            noValidate
+            autoComplete="off"
+          ></Box>
+          <TextField
+            required
+            id="outlined-required"
+            label="Nome"
+            placeholder="Digite seu nome"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <br />
+        <div style={{ textAlign: "center" }}>
+          <Button type="submit" variant="contained">
+            Entrar
+          </Button>
+        </div>
         {error && <p style={{ color: "red", marginTop: "1rem" }}>{error}</p>}
       </form>
     </div>

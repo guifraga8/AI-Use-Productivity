@@ -15,7 +15,7 @@ export default function Conclusion() {
 
   return (
     <div style={{ textAlign: "center", padding: "2rem" }}>
-      <h1>Valeu, {name}!</h1>
+      <h1>Obrigado pela sua partitipação, {name}!</h1>
       <Button onClick={handleReset} variant="contained">
         Voltar ao início
       </Button>

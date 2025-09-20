@@ -21,7 +21,7 @@ export default function RegisterWithAI() {
   
   return (
     <RegisterForm
-      title="Registro (Grupo com IA)"
+      title="Cadastro - Grupo com IA"
       apiEndpoint="/developer/with_ai"
     />
   );

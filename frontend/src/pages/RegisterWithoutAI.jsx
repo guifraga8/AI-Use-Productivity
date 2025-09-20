@@ -21,7 +21,7 @@ export default function RegisterWithAI() {
   
   return (
     <RegisterForm
-      title="Registro (Grupo sem IA)"
+      title="Cadastro - Grupo sem IA"
       apiEndpoint="/developer/without_ai"
     />
   );
