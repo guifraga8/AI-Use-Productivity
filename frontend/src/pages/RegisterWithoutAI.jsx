@@ -6,6 +6,10 @@ export default function RegisterWithAI() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (localStorage.getItem("isAdmin") !== null && localStorage.getItem("adminName") !== null) {
+      localStorage.clear();
+    }
+
     const lastRegisterPage = localStorage.getItem("lastRegisterPage");
     
     if (!lastRegisterPage) {

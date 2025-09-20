@@ -25,7 +25,8 @@ frontend/dist-ssr/
 frontend/build/
 frontend/out/
 
-# === Backend build / uploads / coverage ===
+# === Backend build / tmp / uploads / coverage ===
+backend/tmp/
 backend/uploads/
 coverage/
 

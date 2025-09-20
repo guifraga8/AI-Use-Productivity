@@ -3,6 +3,28 @@ import pool from "../db.js";
 
 const router = express.Router();
 
+router.post("/developer/register_admin", async (req, res) => {
+  const { name } = req.body;
+
+  if (!name ) {
+    return res.status(400).json({ error: "Nome e cargo são obrigatórios." });
+  }
+
+  try {
+    const result = await pool.query(
+      "INSERT INTO Developer (name, role, group_type) VALUES ($1, $2, $3) RETURNING *",
+      [name, "Admin", "admin"]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error("Erro ao cadastrar administrador da plataforma: ", error);
+    res
+      .status(500)
+      .json({ error: "Erro ao cadastrar administrador da plataforma." });
+  }
+});
+
 router.post("/developer/admin", async (req, res) => {
   const { name } = req.body;
 
@@ -76,9 +98,19 @@ router.post("/developer/without_ai", async (req, res) => {
   }
 });
 
+router.get("/developer/admin", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM Developer WHERE group_type = 'admin' ORDER BY id ASC");
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Erro ao buscar administradores da plataforma: ", error);
+    res.status(500).json({ error: "Erro ao buscar administradores da plataforma." });
+  }
+});
+
 router.get("/developer/developers", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM Developer ORDER BY id ASC");
+    const result = await pool.query("SELECT * FROM Developer WHERE group_type <> 'admin' ORDER BY id ASC");
     res.status(200).json(result.rows);
   } catch (error) {
     console.error("Erro ao buscar desenvolvedores: ", error);
@@ -93,7 +125,7 @@ router.get("/developer/challenges/", async (req, res) => {
           d.id AS developer_id,
           d.name AS developer_name,
           d.role AS developer_role,
-          d.group_type AS developer_group,
+          d.group_type AS developer_group_type,
           d.created_at AS developer_created_at,
           c.id AS challenge_id,
           c.developer_id AS challenge_developer_id,
@@ -106,6 +138,7 @@ router.get("/developer/challenges/", async (req, res) => {
       FROM Developer d
       LEFT JOIN Challenge c ON c.developer_id = d.id
       LEFT JOIN DeveloperChallenge dc ON dc.challenge_id = c.id
+      WHERE d.group_type <> 'admin'
       ORDER BY d.id, c.id, dc.id
     `);
 
@@ -120,7 +153,7 @@ router.get("/developer/challenges/", async (req, res) => {
             id: row.developer_id,
             name: row.developer_name,
             role: row.developer_role,
-            group: row.developer_group,
+            group_type: row.developer_group_type,
             created_at: row.developer_created_at
           },
           challenges: []
@@ -148,8 +181,8 @@ router.get("/developer/challenges/", async (req, res) => {
 
     res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error("Erro ao buscar dados completos de developers + challenges: ", error);
-    res.status(500).json({ error: "Erro ao buscar dados completos." });
+    console.error("Erro ao buscar dados completos dos desenvolvedores e desafios: ", error);
+    res.status(500).json({ error: "Erro ao buscar dados completos dos desenvolvedores e desafios." });
   }
 });
 
@@ -160,7 +193,7 @@ router.get("/developer/challenges/with_ai", async (req, res) => {
           d.id AS developer_id,
           d.name AS developer_name,
           d.role AS developer_role,
-          d.group_type AS developer_group,
+          d.group_type AS developer_group_type,
           d.created_at AS developer_created_at,
           c.id AS challenge_id,
           c.developer_id AS challenge_developer_id,
@@ -188,7 +221,7 @@ router.get("/developer/challenges/with_ai", async (req, res) => {
             id: row.developer_id,
             name: row.developer_name,
             role: row.developer_role,
-            group: row.developer_group,
+            group_type: row.developer_group_type,
             created_at: row.developer_created_at
           },
           challenges: []
@@ -216,8 +249,8 @@ router.get("/developer/challenges/with_ai", async (req, res) => {
 
     res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error("Erro ao buscar dados completos de developers + challenges: ", error);
-    res.status(500).json({ error: "Erro ao buscar dados completos." });
+    console.error("Erro ao buscar dados completos dos desenvolvedores do grupo COM IA e desafios: ", error);
+    res.status(500).json({ error: "Erro ao buscar dados completos dos desenvolvedores do grupo COM IA e desafios." });
   }
 });
 
@@ -228,7 +261,7 @@ router.get("/developer/challenges/without_ai", async (req, res) => {
           d.id AS developer_id,
           d.name AS developer_name,
           d.role AS developer_role,
-          d.group_type AS developer_group,
+          d.group_type AS developer_group_type,
           d.created_at AS developer_created_at,
           c.id AS challenge_id,
           c.developer_id AS challenge_developer_id,
@@ -256,7 +289,7 @@ router.get("/developer/challenges/without_ai", async (req, res) => {
             id: row.developer_id,
             name: row.developer_name,
             role: row.developer_role,
-            group: row.developer_group,
+            group_type: row.developer_group_type,
             created_at: row.developer_created_at
           },
           challenges: []
@@ -284,8 +317,8 @@ router.get("/developer/challenges/without_ai", async (req, res) => {
 
     res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error("Erro ao buscar dados completos de developers + challenges: ", error);
-    res.status(500).json({ error: "Erro ao buscar dados completos." });
+    console.error("Erro ao buscar dados completos dos desenvolvedores do grupo SEM IA e desafios: ", error);
+    res.status(500).json({ error: "Erro ao buscar dados completos dos desenvolvedores do grupo SEM IA e desafios." });
   }
 });
 
@@ -298,7 +331,7 @@ router.get("/developer/:developer_id/challenge", async (req, res) => {
           d.id AS developer_id,
           d.name AS developer_name,
           d.role AS developer_role,
-          d.group_type AS developer_group,
+          d.group_type AS developer_group_type,
           d.created_at AS developer_created_at,
           c.id AS challenge_id,
           c.developer_id AS challenge_developer_id,
@@ -326,7 +359,7 @@ router.get("/developer/:developer_id/challenge", async (req, res) => {
             id: row.developer_id,
             name: row.developer_name,
             role: row.developer_role,
-            group: row.developer_group,
+            group_type: row.developer_group_type,
             created_at: row.developer_created_at
           },
           challenges: []
@@ -354,8 +387,8 @@ router.get("/developer/:developer_id/challenge", async (req, res) => {
 
     res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error("Erro ao buscar dados completos de developers + challenges: ", error);
-    res.status(500).json({ error: "Erro ao buscar dados completos." });
+    console.error("Erro ao buscar dados completos do desenvolvedor específico e desafio: ", error);
+    res.status(500).json({ error: "Erro ao buscar dados completos do desenvolvedor específico e desafio." });
   }
 });
 

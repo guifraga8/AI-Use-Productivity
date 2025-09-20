@@ -7,6 +7,7 @@ export default function Admin() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    localStorage.clear();
     const savedAdmin = localStorage.getItem("adminName");
     if (savedAdmin) {
       navigate("/admin/dashboard");
