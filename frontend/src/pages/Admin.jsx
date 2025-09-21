@@ -51,7 +51,7 @@ export default function Admin() {
   return (
     <div
       style={{
-        padding: "2rem",
+        padding: "1rem",
         maxWidth: "400px",
         margin: "0 auto",
         marginTop: "10%",
