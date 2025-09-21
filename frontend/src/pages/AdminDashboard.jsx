@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import AdminAppBar from "../components/AdminAppBaR";
+import AdminAppBar from "../components/AdminAppBar";
 import AdminDrawer from "../components/AdminDrawer";
 import DashboardOverview from "../components/DashboardOverview";
 import DevelopersList from "../components/DevelopersList";
