@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Typography,
-  Box,
-  Stack,
-  Paper,
-  AppBar,
-  Toolbar,
-} from "@mui/material";
+import { Button, Typography, Box, Stack } from "@mui/material";
 import { UploadFile } from "@mui/icons-material";
+import ChallengeInformation from "../components/ChallengeInformation";
+import ChallengeAppBar from "../components/ChallengeAppBar";
 
 export default function Upload() {
   const storedUser = JSON.parse(localStorage.getItem("registeredUser"));
@@ -87,59 +81,15 @@ export default function Upload() {
 
   return (
     <>
-      <AppBar position="static" color="primary">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Desafio Técnico
-          </Typography>
-
-          <Box sx={{ textAlign: "right" }}>
-            <Typography
-              component="span"
-              variant="body1"
-              sx={{ fontWeight: "bold", display: "block" }}
-            >
-              {name}
-            </Typography>
-            <Typography
-              component="span"
-              variant="body2"
-              sx={{ display: "block" }}
-            >
-              {role}
-            </Typography>
-          </Box>
-        </Toolbar>
-      </AppBar>
+      <ChallengeAppBar name={name} role={role} />
 
       <Box sx={{ p: 4, textAlign: "center" }}>
         <Typography variant="h4" gutterBottom>
-          Quando você estiver pronto, envie sua solução do Desafio Técnico ao
-          final da página!
+          Quando você concluir, envie sua solução do Desafio Técnico ao final da
+          página!
         </Typography>
 
-        <Paper elevation={3} sx={{ p: 3, mb: 4, textAlign: "left" }}>
-          <Typography variant="body1" paragraph>
-            Aqui você pode colocar a descrição completa do desafio, prints,
-            instruções e todos os detalhes que os participantes precisam
-            conhecer.
-          </Typography>
-
-          <Stack spacing={2}>
-            <Box
-              component="img"
-              src="/images/print1.png"
-              alt="Print do desafio 1"
-              sx={{ width: "100%", borderRadius: 2, boxShadow: 2 }}
-            />
-            <Box
-              component="img"
-              src="/images/print2.png"
-              alt="Print do desafio 2"
-              sx={{ width: "100%", borderRadius: 2, boxShadow: 2 }}
-            />
-          </Stack>
-        </Paper>
+        <ChallengeInformation></ChallengeInformation>
 
         <Stack spacing={2} alignItems="center">
           <Button
@@ -167,9 +117,19 @@ export default function Upload() {
             Somente arquivos .zip são permitidos
           </Typography>
 
+          <Typography variant="body2">
+            Clique no botão abaixo para fazer o Upload do seu arquivo e após isso,<br />
+            o botão para finalizar o desafio será habilitado!
+          </Typography>
+
           <Button onClick={handleUpload} variant="contained" disabled={!file}>
             Fazer Upload
           </Button>
+
+          <Typography variant="body2">
+            Se já estiver seguro que encerrou o desafio e selecionou o arquivo correto,<br />
+            clique no botão abaixo para finalizar o desafio!
+          </Typography>
 
           <Button
             onClick={handleFinish}

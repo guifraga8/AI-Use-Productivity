@@ -1,7 +1,11 @@
 import express from "express";
 import pool from "../db.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function insertDeveloperChallenge({ developer_id, challenge_id, file_name }) {
   const result = await pool.query(
@@ -31,6 +35,18 @@ router.get("/developer_challenge/developers_challenges", async (req, res) => {
     console.error("Erro ao buscar arquivos dos desafios dos desenvolvedores: ", error);
     res.status(500).json({ error: "Erro ao buscar arquivos dos desafios dos desenvolvedores." });
   }
+});
+
+router.get("/developer_challenge/download/:fileName", (req, res) => {
+  const { fileName } = req.params;
+  const filePath = path.join(__dirname, "../uploads", fileName);
+
+  res.download(filePath, (err) => {
+    if (err) {
+      console.error("Erro ao baixar arquivo:", err);
+      res.status(404).send("Arquivo não encontrado");
+    }
+  });
 });
 
 export default router;

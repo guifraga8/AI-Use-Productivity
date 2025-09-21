@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import Admin from "./pages/Admin";
 import AdminDashboard from "./pages/AdminDashboard";
 import PrivateRouteAdmin from "./routes/PrivateRouteAdmin";
@@ -13,6 +14,7 @@ import Conclusion from "./pages/Conclusion";
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/admin" element={<Admin />} />
         <Route

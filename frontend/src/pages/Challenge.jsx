@@ -1,14 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Typography,
-  Box,
-  Stack,
-  Paper,
-  AppBar,
-  Toolbar,
-} from "@mui/material";
+import { Button, Typography, Box, Stack } from "@mui/material";
 import { useState } from "react";
+import ChallengeInformation from "../components/ChallengeInformation";
+import ChallengeAppBar from "../components/ChallengeAppBar";
 
 export default function Challenge() {
   const storedUser = JSON.parse(localStorage.getItem("registeredUser"));
@@ -18,6 +12,7 @@ export default function Challenge() {
   const navigate = useNavigate();
 
   const [agreed, setAgreed] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
 
   const handleStart = async () => {
     try {
@@ -45,32 +40,14 @@ export default function Challenge() {
     }
   };
 
+  const handleDownload = () => {
+    setDownloaded(true);
+    window.location.href = `${import.meta.env.VITE_API_URL}/challenge/download`;
+  };
+
   return (
     <>
-      <AppBar position="static" color="primary">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Desafio Técnico
-          </Typography>
-
-          <Box sx={{ textAlign: "right" }}>
-            <Typography
-              component="span"
-              variant="body1"
-              sx={{ fontWeight: "bold", display: "block" }}
-            >
-              {name}
-            </Typography>
-            <Typography
-              component="span"
-              variant="body2"
-              sx={{ display: "block" }}
-            >
-              {role}
-            </Typography>
-          </Box>
-        </Toolbar>
-      </AppBar>
+      <ChallengeAppBar name={name} role={role} />
 
       <Box sx={{ p: 4, textAlign: "center" }}>
         {!agreed ? (
@@ -79,8 +56,10 @@ export default function Challenge() {
               Bem-vindo(a), {name}, à página do Desafio Técnico
             </Typography>
             <Typography variant="h6" sx={{ mb: 4 }}>
-              Leia atentamente todas as informações do desafio antes de clicar
-              no botão abaixo.
+              Pedimos que você leia atentamente todas as informações do desafio
+              antes de clicar no botão "Iniciar Desafio". <br />
+              Estando de acordo com as regras, basta clicar no botão "De acordo"
+              abaixo.
             </Typography>
             <Button
               variant="contained"
@@ -92,43 +71,27 @@ export default function Challenge() {
           </>
         ) : (
           <>
-            <Paper elevation={3} sx={{ p: 3, mb: 4, textAlign: "left" }}>
-              <Typography variant="body1" paragraph>
-                Aqui você pode colocar a descrição completa do desafio, prints,
-                instruções e todos os detalhes que os participantes precisam
-                conhecer.
-              </Typography>
-
-              <Stack spacing={2}>
-                <Box
-                  component="img"
-                  src="/images/print1.png"
-                  alt="Print do desafio 1"
-                  sx={{ width: "100%", borderRadius: 2, boxShadow: 2 }}
-                />
-
-                <Box
-                  component="img"
-                  src="/images/print2.png"
-                  alt="Print do desafio 2"
-                  sx={{ width: "100%", borderRadius: 2, boxShadow: 2 }}
-                />
-              </Stack>
-            </Paper>
+            <ChallengeInformation></ChallengeInformation>
 
             <Stack spacing={3} alignItems="center">
-              <Button
-                href={`${import.meta.env.VITE_API_URL}/challenge/download`}
-                variant="contained"
-              >
+              <Typography variant="h8">
+                Clique no botão abaixo para fazer o Download do código fonte do desafio.<br />
+                Prepare o seu ambiente, se organize com calma e apenas clique no próximo botão quando estiver seguro para iniciar o desafio!
+              </Typography>
+
+              <Button onClick={handleDownload} variant="contained">
                 Baixar Desafio
               </Button>
 
-              <Typography variant="h6">
-                Quando você estiver pronto, clique no botão "Iniciar Desafio".
+              <Typography variant="h8">
+                Quando você estiver 100% pronto, clique no botão "Iniciar Desafio".
               </Typography>
 
-              <Button onClick={handleStart} variant="contained" color="success">
+              <Button
+                onClick={handleStart}
+                variant="contained"
+                color="success"
+                disabled={!downloaded}>
                 Iniciar Desafio
               </Button>
             </Stack>
