@@ -57,7 +57,7 @@ export default function Admin() {
         marginTop: "10%",
       }}
     >
-      <h1 style={{ textAlign: "center" }}>Login de Administrador</h1>
+      <h1 style={{ textAlign: "center" }}>Painel de Administrador</h1>
       <br />
       <form onSubmit={handleSubmit}>
         <div style={{ textAlign: "center" }}>
