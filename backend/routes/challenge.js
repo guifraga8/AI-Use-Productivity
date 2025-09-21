@@ -95,7 +95,7 @@ router.post("/challenge/end", async (req, res) => {
       const tmpPath = path.join(__dirname, "../tmp", tmpFile);
       const uploadsDir = path.join(__dirname, "../uploads");
 
-      if (fs.existsSync(uploadsDir)) {
+      if (!fs.existsSync(uploadsDir)) {
         fs.mkdirSync(uploadsDir, { recursive: true });
       }
 
