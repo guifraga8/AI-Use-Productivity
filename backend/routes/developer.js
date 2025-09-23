@@ -5,9 +5,14 @@ const router = express.Router();
 
 router.post("/developer/register_admin", async (req, res) => {
   const { name } = req.body;
+  const adminKey = req.headers["x-admin-key"];
 
-  if (!name ) {
-    return res.status(400).json({ error: "Nome e cargo são obrigatórios." });
+  if (!adminKey || adminKey !== process.env.ADMIN_KEY) {
+    return res.status(403).json({ error: "Acesso negado" });
+  }
+
+  if (!name) {
+    return res.status(400).json({ error: "Nome é obrigatório." });
   }
 
   try {
@@ -100,17 +105,23 @@ router.post("/developer/without_ai", async (req, res) => {
 
 router.get("/developer/admin", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM Developer WHERE group_type = 'admin' ORDER BY id ASC");
+    const result = await pool.query(
+      "SELECT * FROM Developer WHERE group_type = 'admin' ORDER BY id ASC"
+    );
     res.status(200).json(result.rows);
   } catch (error) {
     console.error("Erro ao buscar administradores da plataforma: ", error);
-    res.status(500).json({ error: "Erro ao buscar administradores da plataforma." });
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar administradores da plataforma." });
   }
 });
 
 router.get("/developer/developers", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM Developer WHERE group_type <> 'admin' ORDER BY id ASC");
+    const result = await pool.query(
+      "SELECT * FROM Developer WHERE group_type <> 'admin' ORDER BY id ASC"
+    );
     res.status(200).json(result.rows);
   } catch (error) {
     console.error("Erro ao buscar desenvolvedores: ", error);
@@ -144,7 +155,7 @@ router.get("/developer/challenges/", async (req, res) => {
 
     const data = {};
 
-    result.rows.forEach(row => {
+    result.rows.forEach((row) => {
       const devId = row.developer_id;
 
       if (!data[devId]) {
@@ -154,9 +165,9 @@ router.get("/developer/challenges/", async (req, res) => {
             name: row.developer_name,
             role: row.developer_role,
             group_type: row.developer_group_type,
-            created_at: row.developer_created_at
+            created_at: row.developer_created_at,
           },
-          challenges: []
+          challenges: [],
         };
       }
 
@@ -170,9 +181,9 @@ router.get("/developer/challenges/", async (req, res) => {
             ? {
                 id: row.devchallenge_id,
                 file_name: row.file_name,
-                created_at: row.devchallenge_created_at
+                created_at: row.devchallenge_created_at,
               }
-            : null
+            : null,
         };
 
         data[devId].challenges.push(challengeObj);
@@ -181,8 +192,13 @@ router.get("/developer/challenges/", async (req, res) => {
 
     res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error("Erro ao buscar dados completos dos desenvolvedores e desafios: ", error);
-    res.status(500).json({ error: "Erro ao buscar dados completos dos desenvolvedores e desafios." });
+    console.error(
+      "Erro ao buscar dados completos dos desenvolvedores e desafios: ",
+      error
+    );
+    res.status(500).json({
+      error: "Erro ao buscar dados completos dos desenvolvedores e desafios.",
+    });
   }
 });
 
@@ -212,7 +228,7 @@ router.get("/developer/challenges/with_ai", async (req, res) => {
 
     const data = {};
 
-    result.rows.forEach(row => {
+    result.rows.forEach((row) => {
       const devId = row.developer_id;
 
       if (!data[devId]) {
@@ -222,9 +238,9 @@ router.get("/developer/challenges/with_ai", async (req, res) => {
             name: row.developer_name,
             role: row.developer_role,
             group_type: row.developer_group_type,
-            created_at: row.developer_created_at
+            created_at: row.developer_created_at,
           },
-          challenges: []
+          challenges: [],
         };
       }
 
@@ -238,9 +254,9 @@ router.get("/developer/challenges/with_ai", async (req, res) => {
             ? {
                 id: row.devchallenge_id,
                 file_name: row.file_name,
-                created_at: row.devchallenge_created_at
+                created_at: row.devchallenge_created_at,
               }
-            : null
+            : null,
         };
 
         data[devId].challenges.push(challengeObj);
@@ -249,8 +265,14 @@ router.get("/developer/challenges/with_ai", async (req, res) => {
 
     res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error("Erro ao buscar dados completos dos desenvolvedores do grupo COM IA e desafios: ", error);
-    res.status(500).json({ error: "Erro ao buscar dados completos dos desenvolvedores do grupo COM IA e desafios." });
+    console.error(
+      "Erro ao buscar dados completos dos desenvolvedores do grupo COM IA e desafios: ",
+      error
+    );
+    res.status(500).json({
+      error:
+        "Erro ao buscar dados completos dos desenvolvedores do grupo COM IA e desafios.",
+    });
   }
 });
 
@@ -280,7 +302,7 @@ router.get("/developer/challenges/without_ai", async (req, res) => {
 
     const data = {};
 
-    result.rows.forEach(row => {
+    result.rows.forEach((row) => {
       const devId = row.developer_id;
 
       if (!data[devId]) {
@@ -290,9 +312,9 @@ router.get("/developer/challenges/without_ai", async (req, res) => {
             name: row.developer_name,
             role: row.developer_role,
             group_type: row.developer_group_type,
-            created_at: row.developer_created_at
+            created_at: row.developer_created_at,
           },
-          challenges: []
+          challenges: [],
         };
       }
 
@@ -306,9 +328,9 @@ router.get("/developer/challenges/without_ai", async (req, res) => {
             ? {
                 id: row.devchallenge_id,
                 file_name: row.file_name,
-                created_at: row.devchallenge_created_at
+                created_at: row.devchallenge_created_at,
               }
-            : null
+            : null,
         };
 
         data[devId].challenges.push(challengeObj);
@@ -317,16 +339,23 @@ router.get("/developer/challenges/without_ai", async (req, res) => {
 
     res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error("Erro ao buscar dados completos dos desenvolvedores do grupo SEM IA e desafios: ", error);
-    res.status(500).json({ error: "Erro ao buscar dados completos dos desenvolvedores do grupo SEM IA e desafios." });
+    console.error(
+      "Erro ao buscar dados completos dos desenvolvedores do grupo SEM IA e desafios: ",
+      error
+    );
+    res.status(500).json({
+      error:
+        "Erro ao buscar dados completos dos desenvolvedores do grupo SEM IA e desafios.",
+    });
   }
 });
 
 router.get("/developer/:developer_id/challenge", async (req, res) => {
   const { developer_id } = req.params;
-  
+
   try {
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT 
           d.id AS developer_id,
           d.name AS developer_name,
@@ -346,11 +375,13 @@ router.get("/developer/:developer_id/challenge", async (req, res) => {
       LEFT JOIN DeveloperChallenge dc ON dc.challenge_id = c.id
       WHERE d.id = $1
       ORDER BY d.id, c.id, dc.id
-    `, [developer_id]);
+    `,
+      [developer_id]
+    );
 
     const data = {};
 
-    result.rows.forEach(row => {
+    result.rows.forEach((row) => {
       const devId = row.developer_id;
 
       if (!data[devId]) {
@@ -360,9 +391,9 @@ router.get("/developer/:developer_id/challenge", async (req, res) => {
             name: row.developer_name,
             role: row.developer_role,
             group_type: row.developer_group_type,
-            created_at: row.developer_created_at
+            created_at: row.developer_created_at,
           },
-          challenges: []
+          challenges: [],
         };
       }
 
@@ -376,9 +407,9 @@ router.get("/developer/:developer_id/challenge", async (req, res) => {
             ? {
                 id: row.devchallenge_id,
                 file_name: row.file_name,
-                created_at: row.devchallenge_created_at
+                created_at: row.devchallenge_created_at,
               }
-            : null
+            : null,
         };
 
         data[devId].challenges.push(challengeObj);
@@ -387,8 +418,14 @@ router.get("/developer/:developer_id/challenge", async (req, res) => {
 
     res.status(200).json(Object.values(data));
   } catch (error) {
-    console.error("Erro ao buscar dados completos do desenvolvedor específico e desafio: ", error);
-    res.status(500).json({ error: "Erro ao buscar dados completos do desenvolvedor específico e desafio." });
+    console.error(
+      "Erro ao buscar dados completos do desenvolvedor específico e desafio: ",
+      error
+    );
+    res.status(500).json({
+      error:
+        "Erro ao buscar dados completos do desenvolvedor específico e desafio.",
+    });
   }
 });
 
