@@ -58,7 +58,9 @@ export default function Challenge() {
             <Typography variant="h6" sx={{ mb: 4 }}>
               Pedimos que você leia atentamente todas as informações do desafio
               antes de clicar no botão "Iniciar Desafio". <br />
-              Estando de acordo com as regras, basta clicar no botão "De acordo"
+              <br />O tempo estimado para concluir o desafio pode variar de 15 a 30 minutos,<br />
+              dependendo do seu nível de experiência e conhecimento.<br />
+              <br />Estando de acordo com as regras, basta clicar no botão "De acordo"
               abaixo.
             </Typography>
             <Button
