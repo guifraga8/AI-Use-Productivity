@@ -71,11 +71,12 @@ export default function RegisterForm({ title, apiEndpoint }) {
               <TextField
                 required
                 id="outlined-required"
-                label="Nome"
-                placeholder="Digite seu nome"
+                label="Preencha seu Nome e Sobrenome"
+                placeholder="Ex.: Arthur Morgan"
                 value={form.name}
                 onChange={handleChange}
                 name="name"
+                sx={{ width: "320px" }}
               />
             </div>
             <br />
@@ -83,11 +84,12 @@ export default function RegisterForm({ title, apiEndpoint }) {
               <TextField
                 required
                 id="outlined-required"
-                label="Cargo"
-                placeholder="Digite seu cargo"
+                label="Preencha seu cargo atual"
+                placeholder="Ex.: Full Stack Developer"
                 value={form.role}
                 onChange={handleChange}
                 name="role"
+                sx={{ width: "320px" }}
               />
               <br />
               <br />
