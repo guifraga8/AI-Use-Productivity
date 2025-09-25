@@ -77,7 +77,7 @@ export default function Challenge() {
 
             <Stack spacing={3} alignItems="center">
               <Typography variant="h8">
-                Clique no botão abaixo para fazer o Download do código fonte do desafio.<br />
+                Clique no botão abaixo para fazer o Download do código-fonte do desafio.<br />
                 Prepare o seu ambiente, se organize com calma e apenas clique no próximo botão quando estiver seguro para iniciar o desafio!
               </Typography>
 
