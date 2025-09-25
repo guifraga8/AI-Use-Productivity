@@ -30,21 +30,7 @@ router.post("/challenge/start", async (req, res) => {
 });
 
 router.post("/challenge/upload", upload.single("solution"), (req, res) => {
-  const { oldTmpFile } = req.body;
-
   try {
-    if (oldTmpFile) {
-      const oldPath = path.join(__dirname, "../tmp", oldTmpFile);
-      console.log("Tentando deletar arquivo antigo: ", oldPath);
-
-      if (fs.existsSync(oldPath)) {
-        fs.unlinkSync(oldPath);
-        console.log("Arquivo deletado: ", oldPath);
-      } else {
-        console.warn("Arquivo antigo não encontrado: ", oldPath);
-      }
-    }
-
     if (!req.file) {
       return res.status(400).json({ error: "Nenhum arquivo enviado." });
     }

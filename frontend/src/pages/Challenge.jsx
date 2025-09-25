@@ -73,7 +73,7 @@ export default function Challenge() {
           </>
         ) : (
           <>
-            <ChallengeInformation></ChallengeInformation>
+            <ChallengeInformation />
 
             <Stack spacing={3} alignItems="center">
               <Typography variant="h8">

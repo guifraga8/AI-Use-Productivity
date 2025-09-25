@@ -17,11 +17,19 @@ export default function Upload() {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    if (selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
+
+    if (!selectedFile) {
+      return;
+    }
+
+    if (!selectedFile.name.toLowerCase().endsWith(".zip")) {
       alert("Somente arquivos .zip são permitidos!");
       e.target.value = null;
       return;
     }
+
+    e.target.value = null;
+
     setFile(selectedFile);
 
     setUploadedFile(null);
@@ -89,7 +97,7 @@ export default function Upload() {
           página!
         </Typography>
 
-        <ChallengeInformation></ChallengeInformation>
+        <ChallengeInformation />
 
         <Stack spacing={2} alignItems="center">
           <Button

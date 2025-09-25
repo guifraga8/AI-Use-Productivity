@@ -35,7 +35,7 @@ export default function ChallengeInformation() {
         - No final da página, estarão os botões para baixar o código-fonte e iniciar o desafio.<br />
       </Typography>
       <br />
-      <ChallengeCardContent></ChallengeCardContent>
+      <ChallengeCardContent />
     </Paper>
   );
 }
