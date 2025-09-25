@@ -15,7 +15,7 @@ export default function Upload() {
   const [tmpFile, setTmpFile] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
 
     if (!selectedFile) {
@@ -29,19 +29,19 @@ export default function Upload() {
     }
 
     e.target.value = null;
-
     setFile(selectedFile);
 
-    setUploadedFile(null);
+    await handleUpload(selectedFile);
   };
 
-  const handleUpload = async () => {
-    if (!file) {
+  const handleUpload = async (selectedFile) => {
+    const fileToUpload = selectedFile || file;
+    if (!fileToUpload) {
       return alert("Selecione um arquivo primeiro.");
     }
 
     const formData = new FormData();
-    formData.append("solution", file);
+    formData.append("solution", fileToUpload);
     if (tmpFile) formData.append("oldTmpFile", tmpFile);
 
     const response = await fetch(
@@ -58,7 +58,7 @@ export default function Upload() {
     if (response.ok) {
       setTmpFile(data.tmpFile);
       setUploadedFile(data.tmpFile);
-      alert("Arquivo atualizado na pasta temporária.");
+      alert("Arquivo salvo com sucesso!");
     } else {
       alert(data.error || "Erro no upload.");
     }
@@ -125,16 +125,7 @@ export default function Upload() {
             Somente arquivos .zip são permitidos
           </Typography>
 
-          <Typography variant="body2">
-            Clique no botão abaixo para fazer o Upload do seu arquivo e após isso,<br />
-            o botão para finalizar o desafio será habilitado!
-          </Typography>
-
-          <Button onClick={handleUpload} variant="contained" disabled={!file}>
-            Fazer Upload
-          </Button>
-
-          <Typography variant="body2">
+          <Typography variant="h8">
             Se já estiver seguro que encerrou o desafio e selecionou o arquivo correto,<br />
             clique no botão abaixo para finalizar o desafio!
           </Typography>
