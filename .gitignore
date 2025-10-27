@@ -27,7 +27,7 @@ frontend/out/
 
 # === Backend build / tmp / uploads / coverage ===
 backend/tmp/*.zip
-# backend/uploads/*.zip
+backend/uploads/*.zip
 coverage/
 
 # === Editor directories and files ===
